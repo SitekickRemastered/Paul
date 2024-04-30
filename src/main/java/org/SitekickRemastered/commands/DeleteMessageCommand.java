@@ -15,20 +15,24 @@ public class DeleteMessageCommand implements CommandInterface {
         return "delete_message";
     }
 
+
     @Override
     public String getDescription() {
         return "Deletes a message using the message's ID.";
     }
+
 
     @Override
     public List<OptionData> getOptions() {
         return List.of(new OptionData(OptionType.STRING, "message_id", "The ID of the message to delete.", true));
     }
 
+
     @Override
     public DefaultMemberPermissions getPermissions() {
         return DefaultMemberPermissions.DISABLED;
     }
+
 
     @Override
     public void execute(SlashCommandInteractionEvent e) {
