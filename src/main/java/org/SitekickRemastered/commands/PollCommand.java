@@ -1,5 +1,6 @@
 package org.SitekickRemastered.commands;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -42,7 +43,7 @@ public class PollCommand implements CommandInterface {
 
     @Override
     public DefaultMemberPermissions getPermissions() {
-        return DefaultMemberPermissions.DISABLED;
+        return DefaultMemberPermissions.enabledFor(Permission.VIEW_AUDIT_LOGS);
     }
 
 
@@ -107,7 +108,9 @@ public class PollCommand implements CommandInterface {
 
         mpd.setDuration(durLength, durUnit);
 
-        channel.asTextChannel().sendMessagePoll(mpd.build()).queue();
+        channel.asTextChannel()
+            .sendMessage(Objects.requireNonNull(e.getJDA().getGuildById("603580736250970144")).getRolesByName("Polls", true).getFirst().getAsMention())
+            .setPoll(mpd.build()).queue();
         e.reply("Poll was successfully created in [**#" + channel.getName() + "**](<" + channel.getJumpUrl() + ">)!").setEphemeral(true).queue();
     }
 }
