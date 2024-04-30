@@ -1,5 +1,6 @@
 package org.SitekickRemastered.commands;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -30,7 +31,7 @@ public class EndPollCommand implements CommandInterface {
 
     @Override
     public DefaultMemberPermissions getPermissions() {
-        return DefaultMemberPermissions.DISABLED;
+        return DefaultMemberPermissions.enabledFor(Permission.VIEW_AUDIT_LOGS);
     }
 
 

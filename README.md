@@ -9,7 +9,7 @@
 
 ---
 **create_poll** - *Creates a poll.*
->/create_poll #channel [question] [answers] Optional: [emojis] [duration]
+>/create_poll #channel [question] [answers] Optional: [mention] [emojis] [duration]
 >
 > **Note: Answers and Emojis should be separated by commas. (i.e. Option 1, Option 2, Option 3)**
 

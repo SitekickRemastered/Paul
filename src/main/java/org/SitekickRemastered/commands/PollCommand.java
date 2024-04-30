@@ -35,6 +35,7 @@ public class PollCommand implements CommandInterface {
             new OptionData(OptionType.CHANNEL, "channel", "Which channel should this poll be posted in?", true),
             new OptionData(OptionType.STRING, "question", "What question do you want to ask?", true),
             new OptionData(OptionType.STRING, "answers", "What are the answers for this poll?", true),
+            new OptionData(OptionType.MENTIONABLE, "mention", "Which roles would you like to mention?", false),
             new OptionData(OptionType.STRING, "emojis", "What are the emojis you want to associate with each answer?", false),
             new OptionData(OptionType.STRING, "duration", "How long should this poll last?", false)
         );
@@ -108,9 +109,11 @@ public class PollCommand implements CommandInterface {
 
         mpd.setDuration(durLength, durUnit);
 
-        channel.asTextChannel()
-            .sendMessage(Objects.requireNonNull(e.getJDA().getGuildById("603580736250970144")).getRolesByName("Polls", true).getFirst().getAsMention())
-            .setPoll(mpd.build()).queue();
+        if (e.getOption("mention") != null)
+            channel.asTextChannel().sendMessage(Objects.requireNonNull(e.getOption("mention")).getAsMentionable().getAsMention())
+                .setPoll(mpd.build()).queue();
+        else
+            channel.asTextChannel().sendMessagePoll(mpd.build()).queue();
         e.reply("Poll was successfully created in [**#" + channel.getName() + "**](<" + channel.getJumpUrl() + ">)!").setEphemeral(true).queue();
     }
 }
