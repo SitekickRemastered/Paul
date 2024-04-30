@@ -15,30 +15,36 @@ public class DelistCommand implements CommandInterface {
     List<String> bannedUsers;
     String listPath;
 
-    public DelistCommand(List<String> bannedUsers, String listPath){
+
+    public DelistCommand(List<String> bannedUsers, String listPath) {
         this.bannedUsers = bannedUsers;
         this.listPath = listPath;
     }
+
 
     @Override
     public String getName() {
         return "enpaul";
     }
 
+
     @Override
     public String getDescription() {
         return "Makes Paul re-watch a user. Name will be removed from a list (bannedUsers.txt).";
     }
+
 
     @Override
     public List<OptionData> getOptions() {
         return List.of(new OptionData(OptionType.USER, "user", "Member you want to select.", true));
     }
 
+
     @Override
     public DefaultMemberPermissions getPermissions() {
         return DefaultMemberPermissions.DISABLED;
     }
+
 
     @Override
     public void execute(SlashCommandInteractionEvent e) {
@@ -67,7 +73,8 @@ public class DelistCommand implements CommandInterface {
                 e.reply(user.getName() + " has been removed from the blacklist.").setEphemeral(true).queue();
             else
                 e.reply("Failed to remove " + user.getName() + " from the blacklist").setEphemeral(true).queue();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }

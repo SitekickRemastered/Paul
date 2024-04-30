@@ -21,10 +21,12 @@ public class PollCommand implements CommandInterface {
         return "create_poll";
     }
 
+
     @Override
     public String getDescription() {
         return "Creates a new poll.";
     }
+
 
     @Override
     public List<OptionData> getOptions() {
@@ -37,10 +39,12 @@ public class PollCommand implements CommandInterface {
         );
     }
 
+
     @Override
     public DefaultMemberPermissions getPermissions() {
         return DefaultMemberPermissions.DISABLED;
     }
+
 
     @Override
     public void execute(SlashCommandInteractionEvent e) {
@@ -70,7 +74,7 @@ public class PollCommand implements CommandInterface {
         if (e.getOption("duration") != null) {
             duration = Objects.requireNonNull(e.getOption("duration")).getAsString().split(" ");
 
-            if (duration[0] == null || duration[1] == null){
+            if (duration[0] == null || duration[1] == null) {
                 e.reply("Duration syntax is incorrect.\nUsage: <Length> <Unit> (ex. 2 hour, 3 days, 1 week)").setEphemeral(true).queue();
                 return;
             }
@@ -80,10 +84,15 @@ public class PollCommand implements CommandInterface {
             if (duration[1].toLowerCase().endsWith("s"))
                 duration[1] = duration[1].substring(0, duration[1].length() - 1);
 
-            switch (duration[1].toLowerCase()){
-                case "hour" : durUnit = TimeUnit.HOURS; break;
-                case "day" : break;
-                case "week" : durLength = 7; break;
+            switch (duration[1].toLowerCase()) {
+                case "hour":
+                    durUnit = TimeUnit.HOURS;
+                    break;
+                case "day":
+                    break;
+                case "week":
+                    durLength = 7;
+                    break;
                 default: {
                     e.reply("Poll duration must be at least one hour and at most one week!").setEphemeral(true).queue();
                     return;

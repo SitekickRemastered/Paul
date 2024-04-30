@@ -5,7 +5,10 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import org.SitekickRemastered.commands.*;
+import org.SitekickRemastered.commands.BlacklistCommand;
+import org.SitekickRemastered.commands.DelistCommand;
+import org.SitekickRemastered.commands.EndPollCommand;
+import org.SitekickRemastered.commands.PollCommand;
 import org.SitekickRemastered.listeners.CommandManager;
 import org.SitekickRemastered.listeners.EventListeners;
 
@@ -30,9 +33,9 @@ public class Main {
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT);
 
         ShardManager sm = builder.build();
-        sm.addEventListener(new EventListeners(bannedUsers));
+        sm.addEventListener(new EventListeners(dotenv, bannedUsers));
 
-        CommandManager cm = new CommandManager(dotenv);
+        CommandManager cm = new CommandManager();
         cm.add(new PollCommand());
         cm.add(new EndPollCommand());
         cm.add(new BlacklistCommand(bannedUsers, listPath));
@@ -42,22 +45,26 @@ public class Main {
         sm.addEventListener(cm);
     }
 
-    /** Loads the list of banned users from the .txt file.
+
+    /**
+     * Loads the list of banned users from the .txt file.
+     *
      * @param bannedUsers - The list to save the banned users in.
-     * @param listPath - The path of the banned users list.
+     * @param listPath    - The path of the banned users list.
      */
-    public static void loadBannedUsers(List<String> bannedUsers, String listPath){
+    public static void loadBannedUsers(List<String> bannedUsers, String listPath) {
         try {
 
             // If the file doesn't exist, it's created.
             File bannedUsersFile = new File(listPath);
-            boolean fileCreated = bannedUsersFile.createNewFile();
-            if (fileCreated)
+            if (bannedUsersFile.createNewFile())
                 System.out.println(listPath + " didn't exist! File was created successfully!");
 
             // Read all lines and add them to the list.
             bannedUsers.addAll(Files.readAllLines(Paths.get(listPath)));
         }
-        catch (IOException ex) { throw new RuntimeException(ex); }
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

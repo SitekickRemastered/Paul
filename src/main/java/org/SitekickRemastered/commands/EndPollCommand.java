@@ -15,20 +15,24 @@ public class EndPollCommand implements CommandInterface {
         return "end_poll";
     }
 
+
     @Override
     public String getDescription() {
         return "Ends a poll using the poll's message ID.";
     }
+
 
     @Override
     public List<OptionData> getOptions() {
         return List.of(new OptionData(OptionType.STRING, "message_id", "The ID of the poll to end.", true));
     }
 
+
     @Override
     public DefaultMemberPermissions getPermissions() {
         return DefaultMemberPermissions.DISABLED;
     }
+
 
     @Override
     public void execute(SlashCommandInteractionEvent e) {
