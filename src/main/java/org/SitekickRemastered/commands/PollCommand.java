@@ -1,6 +1,7 @@
 package org.SitekickRemastered.commands;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -32,7 +33,7 @@ public class PollCommand implements CommandInterface {
     @Override
     public List<OptionData> getOptions() {
         return Arrays.asList(
-            new OptionData(OptionType.CHANNEL, "channel", "Which channel should this poll be posted in?", true),
+            new OptionData(OptionType.CHANNEL, "channel", "The channel the message will appear in.", true).setChannelTypes(ChannelType.TEXT, ChannelType.NEWS, ChannelType.GUILD_PUBLIC_THREAD, ChannelType.GUILD_NEWS_THREAD, ChannelType.FORUM),
             new OptionData(OptionType.STRING, "question", "What question do you want to ask?", true),
             new OptionData(OptionType.STRING, "answers", "What are the answers for this poll?", true),
             new OptionData(OptionType.MENTIONABLE, "mention", "Which roles would you like to mention?", false),
@@ -63,9 +64,9 @@ public class PollCommand implements CommandInterface {
 
         for (int i = 0; i < answers.length; i++) {
             if (emojis[i] != null)
-                mpd.addAnswer(answers[i], Emoji.fromFormatted(emojis[i]));
+                mpd.addAnswer(answers[i].trim(), Emoji.fromFormatted(emojis[i].trim()));
             else
-                mpd.addAnswer(answers[i]);
+                mpd.addAnswer(answers[i].trim());
         }
 
         String[] duration;
@@ -110,10 +111,10 @@ public class PollCommand implements CommandInterface {
         mpd.setDuration(durLength, durUnit);
 
         if (e.getOption("mention") != null)
-            channel.asTextChannel().sendMessage(Objects.requireNonNull(e.getOption("mention")).getAsMentionable().getAsMention())
+            channel.asGuildMessageChannel().sendMessage(Objects.requireNonNull(e.getOption("mention")).getAsMentionable().getAsMention())
                 .setPoll(mpd.build()).queue();
         else
-            channel.asTextChannel().sendMessagePoll(mpd.build()).queue();
+            channel.asGuildMessageChannel().sendMessagePoll(mpd.build()).queue();
         e.reply("Poll was successfully created in [**#" + channel.getName() + "**](<" + channel.getJumpUrl() + ">)!").setEphemeral(true).queue();
     }
 }
