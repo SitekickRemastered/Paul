@@ -3,6 +3,7 @@ package org.SitekickRemastered.listeners;
 import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -14,6 +15,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +26,9 @@ public class EventListeners extends ListenerAdapter {
     ScheduledExecutorService pingThread = Executors.newSingleThreadScheduledExecutor();
 
     List<String> bannedUsers;
+
+    // Catches any type of "paul" and regional indicators
+    String paulRegex = ".*([pP\uD83C\uDDF5]+)\\s*([aA\uD83C\uDDE6]+)\\s*([uU\uD83C\uDDFA]+)\\s*([lL\uD83C\uDDF1]+).*";
 
 
     public EventListeners(Dotenv dotenv, List<String> bannedUsers) {
@@ -51,6 +56,16 @@ public class EventListeners extends ListenerAdapter {
 
     public void onMessageReceived(MessageReceivedEvent e) {
 
+        // Checks message embeds for "paul"
+        if (!e.getMessage().getEmbeds().isEmpty()) {
+            for (MessageEmbed me : e.getMessage().getEmbeds()) {
+                if (Objects.requireNonNull(me.getDescription()).matches(paulRegex)) {
+                    e.getChannel().sendMessage("Paul").queue();
+                    return;
+                }
+            }
+        }
+
         if (e.getAuthor().isBot() || bannedUsers.contains(e.getAuthor().getId()))
             return;
 
@@ -59,10 +74,9 @@ public class EventListeners extends ListenerAdapter {
 
         else {
 
-            // Catches any type of "paul" and regional indicators
-            if (e.getMessage().getContentRaw().matches(".*([pP\uD83C\uDDF5]+)\\s*([aA\uD83C\uDDE6]+)\\s*([uU\uD83C\uDDFA]+)\\s*([lL\uD83C\uDDF1]+).*")) {
+            // Catches normal messages with "paul"
+            if (e.getMessage().getContentRaw().trim().replace(System.lineSeparator(), "").matches(paulRegex))
                 e.getChannel().sendMessage("Paul").queue();
-            }
 
             // Checks if an attachment contains "paul"
             else if (!e.getMessage().getAttachments().isEmpty()) {
