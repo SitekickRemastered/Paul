@@ -24,13 +24,8 @@
 ---
 
 # Dependencies
-JDA v5.0.0-beta.23 (Included) - https://github.com/discord-jda/JDA
 
-Logback Classic 1.5.6 (Should be installed with Maven) - https://logback.qos.ch/download.html
-
-Logback Core 1.5.6 (Should be installed with Maven) - https://logback.qos.ch/download.html
-
-SLF4J API 2.0.1.3 (Should be installed with Maven) - https://www.slf4j.org/download.html
+All libraries should be added through Maven
 
 Amazon Corretto 21 (OpenJDK) - https://corretto.aws/downloads/latest/amazon-corretto-21-x64-windows-jdk.msi
 
@@ -40,3 +35,5 @@ Make sure the environment variables file is named ".env".
 If running from the source, The `.env` file should be placed in the main directory.
 
 If running with the `.jar`, the `.env` file should be placed in the same directory as the `.jar`.
+
+There should be a file named `bannedUsers.txt` also located in same directory.
